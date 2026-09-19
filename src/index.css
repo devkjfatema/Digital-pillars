@@ -1,0 +1,90 @@
+/* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+/* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+/* ------------------------------------------------------------------
+   Digital Pillars — global foundation
+   Everything here is either a token, a scene primitive (glass), or an
+   accessibility fallback. Component styling lives in Tailwind classes.
+------------------------------------------------------------------- */
+
+:root {
+  --ease-out-expo: cubic-bezier(0.23, 1, 0.32, 1);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-fill: rgba(16, 20, 27, 0.55);
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background-color: #06070a;
+  color: #f4f6f8;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'cv05';
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+::selection {
+  background: #57d8ff;
+  color: #06070a;
+}
+/* Keyboard focus — visible against the dark canvas everywhere. */
+:focus-visible {
+  outline: 2px solid #57d8ff;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+/* Scene primitive: glass panel used for every floating data card.
+   Backdrop-filter is capped low so mid-range phones don't thrash. */
+.glass {
+  background: var(--glass-fill);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  backdrop-filter: blur(14px) saturate(130%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+/* Hairline separators used instead of boxing content in cards. */
+.hairline {
+  border-top: 1px solid #1a1e26;
+}
+/* Elements animated by GSAP are marked so they never flash unstyled
+   before their ScrollTrigger runs. The .is-ready class is added by the
+   reveal hook; if JS fails, the fallback below keeps content visible. */
+.reveal-pending {
+  opacity: 0;
+}
+.no-js-safe,
+.reveal-pending.is-ready {
+  opacity: 1;
+}
+/* Tilt layers: promoted once, never per-frame. */
+.gpu {
+  transform: translateZ(0);
+  will-change: transform;
+}
+/* ------------------------------------------------------------------
+   Reduced motion / no-JS fallback: the site becomes a clean static
+   composition. Nothing is hidden, nothing moves.
+------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal-pending {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
